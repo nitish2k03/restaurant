@@ -33,7 +33,7 @@ const Menu = () => {
         )}
       </div>
       {open ? (
-        <div className="absolute top-16 right-0 gap-10 bg-red-400 w-2/5 flex flex-col justify-center text-xl items-center h-[calc(100vh-4rem)]">
+        <div className="absolute top-16 right-0 gap-10 z-10 bg-red-400 w-2/5 flex flex-col justify-center text-xl items-center h-[calc(100vh-4rem)]">
           {links.map((item) => (
             <Link href={item.url} key={item.id} onClick={() => setOpen(false)}>
               {item.title}
