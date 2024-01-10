@@ -1,10 +1,20 @@
 import React from "react";
-import { menu } from "~/data";
 import Link from "next/link";
-const MenuPage = () => {
+import { Menu } from "~/types/types";
+const MenuPage = async () => {
+  const getData = async () => {
+    const res = await fetch("http://localhost:3000/api/categories", {
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      throw new Error("Failed");
+    }
+    return res.json();
+  };
+  const categories: Menu = await getData();
   return (
     <div className="flex md:flex-row flex-col h-[calc(100vh-4rem)] p-4 items-center">
-      {menu.map((singleMenu) => (
+      {categories.map((singleMenu) => (
         <Link
           href={`menu/${singleMenu.slug}`}
           key={singleMenu.id}
