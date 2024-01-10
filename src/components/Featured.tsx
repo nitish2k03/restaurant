@@ -1,33 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
-interface propType {
-  price: number;
-  title: string;
-  desc: string | undefined;
-  img: string | undefined;
-}
-const Featured: React.FC<propType> = ({ price, title, desc, img }) => {
+import { Product } from "~/data";
+const Featured = async () => {
+  const getData = async () => {
+    const res = await fetch("http://localhost:3000/api/products", {
+      cache: "no-cache",
+    });
+    if (!res.ok) {
+      return new Error("Failed");
+    }
+    return res.json();
+  };
+  const featuredProducts: Product[] = await getData();
   return (
-    <div className="">
-      <div className="flex flex-col h-[50vh] md:h-[100vh] md:w-[33vw] w-screen hover:bg-fuchsia-100 pb-2">
-        <div className="relative flex-1">
-          <Image
-            src={img ? img : ""}
-            alt=""
-            fill
-            className="object-contain py-2"
-          />
-        </div>
-        <div className="flex-1 flex flex-col items-center gap-4 justify-between text-red-400 px-2">
-          <div className="font-bold text-lg">{title}</div>
-          <div className="text-sm md:text-base px-8">{desc}</div>
-          <div className="font-bold">${price}</div>
-          <div className="">
-            <button className="bg-red-400 rounded-md h-10 w-28 text-white font-bold">
-              Add to Cart
-            </button>
+    <div className="w-screen overflow-x-scroll text-red-500">
+      {/* WRAPPER */}
+      <div className="w-max flex">
+        {featuredProducts.map((item) => (
+          <div
+            key={item.id}
+            className="w-screen h-[60vh] flex flex-col items-center justify-around p-4 hover:bg-fuchsia-50 transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh]"
+          >
+            {item.img && (
+              <div className="relative flex-1 w-full hover:rotate-[60deg] transition-all duration-500">
+                <Image src={item.img} alt="" fill className="object-contain" />
+              </div>
+            )}
+            <div className=" flex-1 flex flex-col items-center justify-center text-center gap-4">
+              <h1 className="text-xl font-bold uppercase xl:text-2xl 2xl:text-3xl">
+                {item.title}
+              </h1>
+              <p className="p-4 2xl:p-8">{item.desc}</p>
+              <span className="text-xl font-bold">${item.price}</span>
+              <button className="bg-red-500 text-white p-2 rounded-md">
+                Add to Cart
+              </button>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
