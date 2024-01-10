@@ -1,7 +1,17 @@
 import React from "react";
 import Pizzas from "~/components/Pizzas";
-import { pizzas } from "~/data";
-const CategoryPage = () => {
+import { Product } from "~/data";
+const CategoryPage = async ({ params }: { params: { category: string } }) => {
+  const getData = async (category: string) => {
+    const res = await fetch(
+      `http://localhost:3000/api/products?cat=${category}`
+    );
+    if (!res.ok) {
+      return new Error("Failed");
+    }
+    return res.json();
+  };
+  const pizzas: Product[] = await getData(params.category);
   return (
     <div className="flex flex-wrap">
       {pizzas.map((pizza) => (
